@@ -1,6 +1,7 @@
-import { Command } from 'commander';
+#!/usr/bin/env node
+
 import getTron from './tron';
-import getTrc20 from './tron-trc20';
+import getTrc20 from './tron-usdt';
 import inquirer from 'inquirer';
 
 const createAccount = async () => {
@@ -25,21 +26,6 @@ const usdtBalance = async () => {
   console.log(symbol, (amount / (10 ** decimals)).toString());
 }
 
-const accountResources = async () => {
-  const { address } = await inquirer.prompt([
-    {
-      type: 'input',
-      message: 'Tron account address',
-      name: 'address',
-    }
-  ]);
-
-  const tron = await getTron();
-
-  const result = await tron.trx.getAccountResources(address);
-  console.log(result);
-}
-
 const getAccount = async () => {
   const { address } = await inquirer.prompt([
     {
@@ -53,48 +39,6 @@ const getAccount = async () => {
 
   const result = await tron.trx.getAccount(address);
   console.log(result);
-}
-
-const freezeBalance = async () => {
-  const { address, amount, resource, privateKey } = await inquirer.prompt([
-    {
-      type: 'input',
-      message: 'Tron account address',
-      name: 'address',
-    },
-    {
-      type: 'number',
-      message: 'Amount',
-      name: 'amount',
-    },
-    {
-      type: 'list',
-      message: 'Resource',
-      name: 'resource',
-      choices: ['BANDWIDTH', 'ENERGY'],
-    },
-    {
-      type: 'password',
-      message: 'Private key',
-      name: "privateKey",
-      mask: '*',
-    },
-  ]);
-
-  const tronWeb = await getTron();
-
-  const tradeObj = await tronWeb.transactionBuilder.freezeBalance(
-    tronWeb.toSun(amount),
-    3,
-    resource,
-    tronWeb.address.toHex(address),
-    tronWeb.address.toHex(address),
-  );
-
-  const signedTxn = await tronWeb.trx.sign(tradeObj, privateKey);
-  const receipt = await tronWeb.trx.sendRawTransaction(signedTxn);
-
-  console.log(receipt);
 }
 
 const trxBalance = async () => {
@@ -191,9 +135,7 @@ const commands: { [key: string]: () => Promise<void> } = {
   'trx-balance': trxBalance,
   'usdt-transfer': usdtTransfer,
   'transaction-info': transactionInfo,
-  'get-account-resources': accountResources,
   'get-account': getAccount,
-  'freeze-balance': freezeBalance,
 };
 
 const handleErrors = (cb: (...args: any[]) => Promise<void>) => async (...args: any[]) => {

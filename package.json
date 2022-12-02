@@ -1,21 +1,29 @@
 {
-  "name": "tron",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "@logrus/tron-cli",
+  "version": "1.0.3",
+  "description": "Simple interactive CLI for basic USDT-TRC20 transactions.",
+  "main": "dist/index.js",
+  "bin": {
+    "tron-cli": "dist/index.js"
+  },
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node ./dist/index.js"
+    "start": "tsc && node ./dist/index.js",
+    "prepare": "tsc"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "commander": "^9.4.1",
     "inquirer": "^8.2.5",
+    "lodash": "^4.17.21",
     "tronweb": "^4.4.0"
   },
   "devDependencies": {
     "@types/inquirer": "^9.0.3",
+    "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.10",
     "typescript": "^4.9.3"
   }
