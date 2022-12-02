@@ -14,7 +14,7 @@
       "program": "${workspaceFolder}/src/index.ts",
       "outFiles": [
         "${workspaceFolder}/dist/**/*.js"
-      ]
+      ],"args": ["create-account"]
     }
   ]
 }
