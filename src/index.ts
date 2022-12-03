@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 import getTron from './tron';
-import getTrc20 from './tron-usdt';
+import getUsdt from './tron-usdt';
 import inquirer from 'inquirer';
 
 const createAccount = async () => {
   const tron = getTron();
   const account = await tron.createAccount();
-  console.dir(account);
+  console.log(account);
 };
 
 const usdtBalance = async () => {
@@ -19,10 +19,11 @@ const usdtBalance = async () => {
     }
   ]);
 
-  const trc20 = await getTrc20();
-  const amount = await trc20.balanceOf(address).call();
-  const decimals = await trc20.decimals().call();
-  const symbol = await trc20.symbol().call();
+  const usdt = await getUsdt();
+  const amount = await usdt.balanceOf(address).call();
+  const decimals = await usdt.decimals().call();
+  const symbol = await usdt.symbol().call();
+
   console.log(symbol, (amount / (10 ** decimals)).toString());
 }
 
@@ -53,7 +54,7 @@ const trxBalance = async () => {
   const tron = await getTron();
 
   const result = await tron.trx.getBalance(address);
-  console.log(`TRX ${(result / 1000000).toString()}`);
+  console.log(`TRX ${tron.fromSun(result).toString()}`);
 }
 
 const usdtTransfer = async () => {
@@ -83,10 +84,10 @@ const usdtTransfer = async () => {
   ]);
 
   const tronWeb = await getTron();
-  const trc20 = await getTrc20(privateKey);
-  const decimals = await trc20.decimals().call();
+  const usdt = await getUsdt(privateKey);
+  const decimals = await usdt.decimals().call();
   const amountDecimal = amount * (10 ** decimals);
-  let result = await trc20.transfer(
+  let result = await usdt.transfer(
     addressTo,
     amountDecimal,
   ).send({
@@ -136,7 +137,7 @@ const waitForTransaction = async (transactionId: string) => {
     const result = await tron.trx.getTransactionInfo(transactionId);
     if (result && result.receipt) {
       console.log(result.receipt);
-      console.log(`TRX wasted: ${tron.fromSun(result.energy_fee + result.net_fee)}`);
+      console.log(`TRX wasted: ${tron.fromSun(result.energy_fee || 0 + result.net_fee || 0)}`);
       return;
     }
     await new Promise(resolve => setTimeout(resolve, 5000));
@@ -157,7 +158,7 @@ const transactionInfo = async () => {
   const tron = await getTron();
   const result = await tron.trx.getTransactionInfo(transactionId);
   console.log(result);
-  console.log(`TRX wasted: ${tron.fromSun(result.receipt.energy_fee + result.receipt.net_fee)}`);
+  console.log(`TRX wasted: ${tron.fromSun(result.receipt.energy_fee || 0 + result.receipt.net_fee || 0)}`);
 }
 
 const commands: { [key: string]: () => Promise<void> } = {

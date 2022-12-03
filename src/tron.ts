@@ -1,7 +1,7 @@
 import { shuffle } from 'lodash';
 const TronWeb = require('tronweb');
 
-const fullNodes = shuffle([
+const fullNodeIps = shuffle([
   '3.225.171.164',
   '52.53.189.99',
   '18.196.99.16',
@@ -24,10 +24,12 @@ const fullNodes = shuffle([
   '161.117.83.38',
 ]);
 
+const fullNodeIp = fullNodeIps[0];
+
 export default () => {
   const HttpProvider = TronWeb.providers.HttpProvider;
-  const fullNode = new HttpProvider(`http://${fullNodes[0]}:8090`);
-  const solidityNode = new HttpProvider(`http://${fullNodes[0]}:8091`);
-  const eventServer = new HttpProvider(`http://${fullNodes[0]}:8090`);
+  const fullNode = new HttpProvider(`http://${fullNodeIp}:8090`);
+  const solidityNode = new HttpProvider(`http://${fullNodeIp}:8091`);
+  const eventServer = new HttpProvider(`http://${fullNodeIp}:8090`);
   return new TronWeb(fullNode, solidityNode, eventServer);
 }
