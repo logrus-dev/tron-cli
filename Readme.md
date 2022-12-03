@@ -5,7 +5,7 @@ Basic operations with Tron TRX and USDT tokens.
 - Check TRC and USDT balance
 
 Application is 100% stateless - keys are not stored nor logged anywhere. You only enter and see them in the console.
-Using official [TronWeb SDK](https://developers.tron.network/docs/tronweb-1).
+Using official [TronWeb SDK](https://developers.tron.network/docs/tronweb-1) and [public Mainnet nodes](https://developers.tron.network/docs/networks#public-node).
 
 ```
 npx @logrus/tron-cli
