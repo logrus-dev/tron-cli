@@ -98,6 +98,37 @@ const usdtTransfer = async () => {
   await waitForTransaction(result);
 }
 
+const trxTransfer = async () => {
+  const { addressTo, amount, privateKey } = await inquirer.prompt([
+    {
+      type: 'input',
+      message: 'Tron account of the recipient',
+      name: 'addressTo',
+    },
+    {
+      type: 'number',
+      message: 'Amount',
+      name: 'amount',
+    },
+    {
+      type: 'password',
+      message: 'Private key',
+      name: "privateKey",
+      mask: '*',
+    },
+  ]);
+
+  const tronWeb = await getTron();
+  const result = await tronWeb.trx.sendTransaction(addressTo, tronWeb.toSun(amount), privateKey);
+  const txID = result.transaction.txID;
+
+  console.log('Transaction ID: ', txID);
+
+  if (txID) {
+    await waitForTransaction(txID);
+  }
+}
+
 const waitForTransaction = async (transactionId: string) => {
   const tron = await getTron();
 
@@ -130,30 +161,40 @@ const transactionInfo = async () => {
 }
 
 const commands: { [key: string]: () => Promise<void> } = {
-  'create-account': createAccount,
   'usdt-balance': usdtBalance,
   'trx-balance': trxBalance,
+
   'usdt-transfer': usdtTransfer,
+  'trx-transfer': trxTransfer,
+
   'transaction-info': transactionInfo,
+
   'get-account': getAccount,
+  'create-account': createAccount,
 };
 
 const handleErrors = (cb: (...args: any[]) => Promise<void>) => async (...args: any[]) => {
   try {
     await cb(...args);
-  } catch (e) {
-    console.error(e);
+  } catch (e: any) {
+    console.error(e.message);
   }
 };
 
 (async () => {
-  const { command } = await inquirer.prompt([
-    {
-      type: 'list',
-      message: 'Choose Tron network command',
-      name: 'command',
-      choices: Object.keys(commands)
+  while (true) {
+    const { command } = await inquirer.prompt([
+      {
+        type: 'list',
+        message: 'Choose Tron network command',
+        name: 'command',
+        choices: [...Object.keys(commands), 'exit'],
+        loop: false,
+      }
+    ]);
+    if (command === 'exit') {
+      return;
     }
-  ]);
-  await handleErrors(commands[command])();
+    await handleErrors(commands[command])();
+  }
 })();

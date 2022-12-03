@@ -1,7 +1,11 @@
 {
   "name": "@logrus/tron-cli",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "Simple interactive CLI for basic USDT-TRC20 transactions.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logrus-dev/tron-cli.git"
+  },
   "main": "dist/index.js",
   "bin": {
     "tron-cli": "dist/index.js"
