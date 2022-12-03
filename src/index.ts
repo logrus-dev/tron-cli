@@ -76,7 +76,7 @@ const usdtTransfer = async () => {
     },
     {
       type: 'number',
-      message: 'Private key',
+      message: 'Fee limit',
       name: "feeLimit",
       default: 50,
     }
