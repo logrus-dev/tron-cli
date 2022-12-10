@@ -26,7 +26,7 @@
     "start": "tsc && node ./dist/index.js",
     "prepare": "tsc"
   },
-  "author": "",
+  "author": "logrus.dev",
   "license": "GPL-3.0-only",
   "dependencies": {
     "convict": "^6.2.3",
