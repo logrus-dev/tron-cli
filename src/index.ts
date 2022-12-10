@@ -5,6 +5,7 @@ import { withUsdt } from './tron-usdt';
 import inquirer from 'inquirer';
 import config from './config';
 import { delay } from './helpers';
+import logUpdate from 'log-update';
 
 const createAccount = async () => {
   const account = await withTronWeb(tw => tw.createAccount());
@@ -82,7 +83,7 @@ const usdtTransfer = async () => {
     amountDecimal,
   ).send({
     feeLimit: toSun(config.get('feeLimit')),
-  }));
+  }), privateKey);
 
   console.log('Transaction ID: ', result);
 
@@ -120,11 +121,13 @@ const trxTransfer = async () => {
 }
 
 const waitForTransaction = async (transactionId: string) => {
-  for (let i = 0; i < 30; ++i) {
+  const iterations = 30;
+  for (let i = 0; i < iterations; ++i) {
+    logUpdate(`⌛ Waiting for transaction in blockchain: ${iterations - i}`);
     const result = await withTronWeb(tw => tw.trx.getTransactionInfo(transactionId));
     if (result && result.receipt) {
       console.log(result.receipt);
-      console.log(`TRX wasted: ${fromSun(result.energy_fee || 0 + result.net_fee || 0)}`);
+      console.log(`TRX wasted: ${fromSun((result.receipt.energy_fee || 0) + (result.receipt.net_fee || 0))}`);
       return;
     }
     await delay(5000);
