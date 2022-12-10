@@ -29,11 +29,13 @@
   "author": "",
   "license": "GPL-3.0-only",
   "dependencies": {
+    "convict": "^6.2.3",
     "inquirer": "^8.2.5",
     "lodash": "^4.17.21",
     "tronweb": "^4.4.0"
   },
   "devDependencies": {
+    "@types/convict": "^6.1.1",
     "@types/inquirer": "^9.0.3",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.10",

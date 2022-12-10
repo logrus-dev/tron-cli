@@ -1,12 +1,12 @@
-import getTron from './tron';
+import { withTronWeb } from "./tron";
 
 const usdtSmartContract = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t';
 
-export default async (privateKey?: string) => {
-  const tron = await getTron();
-  tron.setAddress(usdtSmartContract);
+export const withUsdt = <T = any>(cb: (usdt: any) => Promise<T>, privateKey?: string): Promise<T> => withTronWeb(async tw => {
+  tw.setAddress(usdtSmartContract);
   if (privateKey) {
-    tron.setPrivateKey(privateKey);
+    tw.setPrivateKey(privateKey);
   }
-  return await tron.contract().at(usdtSmartContract);
-};
+  const contract = await tw.contract().at(usdtSmartContract);
+  return await cb(contract);
+});
