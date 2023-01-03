@@ -167,7 +167,7 @@ const handleErrors = (cb: (...args: any[]) => Promise<void>) => async (...args: 
   try {
     await cb(...args);
   } catch (e: any) {
-    console.error(e.message);
+    console.error(e.message || e);
   }
 };
 
