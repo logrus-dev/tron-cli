@@ -65,7 +65,7 @@ const usdtTransfer = async () => {
     },
     {
       type: 'number',
-      message: 'Amount',
+      message: 'Amount USD',
       name: 'amount',
     },
     {
@@ -99,7 +99,7 @@ const trxTransfer = async () => {
     },
     {
       type: 'number',
-      message: 'Amount',
+      message: 'Amount TRX',
       name: 'amount',
     },
     {
@@ -127,7 +127,7 @@ const waitForTransaction = async (transactionId: string) => {
     const result = await withTronWeb(tw => tw.trx.getTransactionInfo(transactionId));
     if (result && result.receipt) {
       console.log(result.receipt);
-      console.log(`TRX wasted: ${fromSun((result.receipt.energy_fee || 0) + (result.receipt.net_fee || 0))}`);
+      showTrxWasted(result);
       return;
     }
     await delay(5000);
@@ -147,8 +147,10 @@ const transactionInfo = async () => {
 
   const result = await withTronWeb(tw => tw.trx.getTransactionInfo(transactionId));
   console.log(result);
-  console.log(`TRX wasted: ${fromSun(result.receipt.energy_fee || 0 + result.receipt.net_fee || 0)}`);
+  showTrxWasted(result);
 }
+
+const showTrxWasted = (result: any) => console.log(`TRX wasted: ${fromSun(result.receipt.energy_fee || 0 + result.receipt.net_fee || 0)}`);
 
 const commands: { [key: string]: () => Promise<void> } = {
   'usdt-balance': usdtBalance,
@@ -167,7 +169,11 @@ const handleErrors = (cb: (...args: any[]) => Promise<void>) => async (...args: 
   try {
     await cb(...args);
   } catch (e: any) {
-    console.error(e.message || e);
+    if (config.get('debug')) {
+      console.error(e);
+    } else {
+      console.error(e.message || e);
+    }
   }
 };
 
