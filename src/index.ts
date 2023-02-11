@@ -4,11 +4,12 @@ import { fromSun, toSun, withTronWeb } from './tron';
 import { withUsdt } from './tron-usdt';
 import inquirer from 'inquirer';
 import config from './config';
-import { delay } from './helpers';
+import { delay, passwordTransformer } from './helpers';
 import logUpdate from 'log-update';
 
 const createAccount = async () => {
   const account = await withTronWeb(tw => tw.createAccount());
+  console.log('❗Save this information to a safe place. It will never be displayed again.');
   console.log(account);
 };
 
@@ -18,6 +19,7 @@ const usdtBalance = async () => {
       type: 'input',
       message: 'Tron account address',
       name: 'address',
+      filter: s => s?.trim(),
     }
   ]);
 
@@ -36,6 +38,7 @@ const getAccount = async () => {
       type: 'input',
       message: 'Tron account address',
       name: 'address',
+      filter: s => s?.trim(),
     }
   ]);
 
@@ -49,6 +52,7 @@ const trxBalance = async () => {
       type: 'input',
       message: 'Tron account address',
       name: 'address',
+      filter: s => s?.trim(),
     }
   ]);
 
@@ -62,6 +66,7 @@ const usdtTransfer = async () => {
       type: 'input',
       message: 'Tron account of the recipient',
       name: 'addressTo',
+      filter: s => s?.trim(),
     },
     {
       type: 'number',
@@ -69,10 +74,10 @@ const usdtTransfer = async () => {
       name: 'amount',
     },
     {
-      type: 'password',
-      message: 'Private key',
+      type: 'input',
+      message: 'Private key of the sender',
       name: "privateKey",
-      mask: '*',
+      transformer: passwordTransformer,
     },
   ]);
 
@@ -96,6 +101,7 @@ const trxTransfer = async () => {
       type: 'input',
       message: 'Tron account of the recipient',
       name: 'addressTo',
+      filter: s => s?.trim(),
     },
     {
       type: 'number',
@@ -103,10 +109,10 @@ const trxTransfer = async () => {
       name: 'amount',
     },
     {
-      type: 'password',
-      message: 'Private key',
+      type: 'input',
+      message: 'Private key of the sender',
       name: "privateKey",
-      mask: '*',
+      transformer: passwordTransformer,
     },
   ]);
 
@@ -142,6 +148,7 @@ const transactionInfo = async () => {
       type: 'input',
       message: 'ID of transaction',
       name: 'transactionId',
+      filter: s => s?.trim(),
     }
   ]);
 
