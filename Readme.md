@@ -21,3 +21,5 @@ Command arguments (all optional):
 | `--nodes` | String | [Public Mainnet nodes](https://developers.tron.network/docs/networks#public-node) | Comma-separated list of TRON blockchain full node IPs. |
 | `--feeLimit` | Number | 50 | Transaction fee limit in TRX. |
 | `--debug` | Boolean | false | Show debug logs |
+| `--tronGridApiUrl` | String | Empty | [TronGrid](https://developers.tron.network/reference/background) API URL |
+| `--tronGridApiKey` | String | Empty | [TronGrid](https://developers.tron.network/reference/background) API Key |

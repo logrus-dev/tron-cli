@@ -179,7 +179,7 @@ const handleErrors = (cb: (...args: any[]) => Promise<void>) => async (...args: 
     if (config.get('debug')) {
       console.error(e);
     } else {
-      console.error(e.message || e);
+      console.error(e.response?.data?.Error || e.message || e);
     }
   }
 };

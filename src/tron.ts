@@ -4,14 +4,33 @@ import config from './config';
 import { delay } from './helpers';
 
 const getTronWeb = () => {
-  const fullNodeIp = shuffle(config.get('nodes'))[0];
+  let fullNodeUrl: string;
+  let solidityNodeUrl: string;
+  let eventServerUrl: string;
+
+  const apiKey = config.get('tronGridApiKey');
+  const apiUrl = config.get('tronGridApiUrl');
+  if (apiUrl) {
+    fullNodeUrl = solidityNodeUrl = eventServerUrl = apiUrl;
+  } else {
+    let nodeHost = shuffle(config.get('nodes'))[0];
+    fullNodeUrl = `http://${nodeHost}:8090`;
+    solidityNodeUrl = `http://${nodeHost}:8091`;
+    eventServerUrl = `http://${nodeHost}:8090`;
+  }
 
   const timeout = config.get('timeout');
   const HttpProvider = TronWeb.providers.HttpProvider;
-  const fullNode = new HttpProvider(`http://${fullNodeIp}:8090`, timeout);
-  const solidityNode = new HttpProvider(`http://${fullNodeIp}:8091`, timeout);
-  const eventServer = new HttpProvider(`http://${fullNodeIp}:8090`, timeout);
-  return new TronWeb(fullNode, solidityNode, eventServer);
+  const fullNode = new HttpProvider(fullNodeUrl, timeout);
+  const solidityNode = new HttpProvider(solidityNodeUrl, timeout);
+  const eventServer = new HttpProvider(eventServerUrl, timeout);
+  const tronWeb = new TronWeb(fullNode, solidityNode, eventServer);
+
+  if (apiKey) {
+    tronWeb.setHeader({"TRON-PRO-API-KEY": apiKey});
+  }
+
+  return tronWeb;
 };
 
 const staticTronWeb = getTronWeb();

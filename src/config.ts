@@ -82,6 +82,22 @@ const config = convict({
     arg: 'debug',
     default: false,
   },
+  tronGridApiUrl: {
+    doc: 'TronGrid API URL.',
+    format: String,
+    env: 'TRON_CLI_TRON_GRID_API_URL',
+    arg: 'tronGridApiUrl',
+    default: null,
+    nullable: true,
+  },
+  tronGridApiKey: {
+    doc: 'TronGrid API key.',
+    format: String,
+    env: 'TRON_CLI_TRON_GRID_API_KEY',
+    arg: 'tronGridApiKey',
+    default: null,
+    nullable: true,
+  },
 });
 
 if (existsSync('./config.json')) {
