@@ -6,6 +6,7 @@ import inquirer from 'inquirer';
 import config from './config';
 import { delay, passwordTransformer } from './helpers';
 import logUpdate from 'log-update';
+import BigNumber from 'bignumber.js';
 
 const createAccount = async () => {
   const account = await withTronWeb(tw => tw.createAccount());
@@ -82,10 +83,13 @@ const usdtTransfer = async () => {
   ]);
 
   const decimals = await withUsdt(usdt => usdt.decimals().call());
-  const amountDecimal = amount * (10 ** decimals);
+  const decimalsMultiplier = new BigNumber(10).pow(decimals);
+  const amountBigNumber = new BigNumber(amount);
+  const amountDecimal = amountBigNumber.times(decimalsMultiplier);
+
   let result = await withUsdt(usdt => usdt.transfer(
     addressTo,
-    amountDecimal,
+    amountDecimal.toString(),
   ).send({
     feeLimit: toSun(config.get('feeLimit')),
   }), privateKey);
