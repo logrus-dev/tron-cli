@@ -9,7 +9,7 @@ import logUpdate from 'log-update';
 import BigNumber from 'bignumber.js';
 
 const createAccount = async () => {
-  const account = await withTronWeb(tw => tw.createRandom());
+  const account = await withTronWeb(tw => tw.createAccount());
   console.log('❗Save this information to a safe place. It will never be displayed again.');
   console.log(account);
 };
