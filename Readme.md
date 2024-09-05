@@ -9,6 +9,9 @@ Using official [TronWeb SDK](https://developers.tron.network/docs/tronweb-1) and
 
 ```
 npx @logrus/tron-cli
+A known issue: "Error: Cannot find module '@noble/secp256k1'"
+To solve this issue, please install @noble/secp256k1@1.7.1 manually: npm install @noble/secp256k1@1.7.1
+Blame Tron devs.
 ```
 
 Command arguments (all optional):
@@ -23,3 +26,4 @@ Command arguments (all optional):
 | `--debug`          | Boolean | false | Show debug logs |
 | `--tronGridApiUrl` | String  | Empty | [TronGrid](https://developers.tron.network/reference/background) API URL. If specified, `--nodes` argument is ignored. |
 | `--tronGridApiKey` | String  | Empty | [TronGrid](https://developers.tron.network/reference/background) API Key |
+
