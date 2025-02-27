@@ -9,7 +9,7 @@ import logUpdate from 'log-update';
 import BigNumber from 'bignumber.js';
 
 const createAccount = async () => {
-  const account = await withTronWeb(tw => tw.createRandom());
+  const account = await withTronWeb(async tw => tw.createRandom());
   console.log('❗Save this information to a safe place. It will never be displayed again.');
   console.log(account);
 };
@@ -24,13 +24,13 @@ const usdtBalance = async () => {
     }
   ]);
 
-  const { amount, decimals, symbol } = await withUsdt(async usdt => ({
+  const { amount, decimals, symbol }: { amount: bigint, decimals: bigint, symbol: string } = await withUsdt(async usdt => ({
     amount: await usdt.balanceOf(address).call(),
     decimals: await usdt.decimals().call(),
     symbol: await usdt.symbol().call(),
   }));
 
-  console.log(symbol, (amount / (10 ** decimals)).toString());
+  console.log(symbol, (amount / BigInt(BigInt(10) ** decimals)).toString());
 }
 
 const getAccount = async () => {
@@ -82,8 +82,10 @@ const usdtTransfer = async () => {
     },
   ]);
 
-  const decimals = await withUsdt(usdt => usdt.decimals().call());
-  const decimalsMultiplier = new BigNumber(10).pow(decimals);
+  const decimals: bigint = await withUsdt(usdt => usdt.decimals().call());
+
+  const decimalsMultiplier = new BigNumber(10).pow(new BigNumber(decimals.toString()));
+
   const amountBigNumber = new BigNumber(amount);
   const amountDecimal = amountBigNumber.times(decimalsMultiplier);
 
@@ -120,7 +122,7 @@ const trxTransfer = async () => {
     },
   ]);
 
-  const result = await withTronWeb(tw => tw.trx.sendTransaction(addressTo, toSun(amount), privateKey));
+  const result = await withTronWeb(tw => tw.trx.sendTransaction(addressTo, Number(toSun(Number(amount))), privateKey));
   const txID = result.transaction.txID;
 
   console.log('Transaction ID: ', txID);

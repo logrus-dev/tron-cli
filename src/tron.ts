@@ -1,5 +1,5 @@
 import { shuffle } from 'lodash';
-const TronWeb = require('tronweb');
+import { TronWeb, providers } from 'tronweb';
 import config from './config';
 import { delay } from './helpers';
 
@@ -20,7 +20,7 @@ const getTronWeb = () => {
   }
 
   const timeout = config.get('timeout');
-  const HttpProvider = TronWeb.providers.HttpProvider;
+  const HttpProvider = providers.HttpProvider;
   const fullNode = new HttpProvider(fullNodeUrl, timeout);
   const solidityNode = new HttpProvider(solidityNodeUrl, timeout);
   const eventServer = new HttpProvider(eventServerUrl, timeout);
@@ -39,7 +39,7 @@ export const fromSun = staticTronWeb.fromSun;
 
 export const toSun = staticTronWeb.toSun;
 
-export const withTronWeb = async <T = any>(cb: (tw: any) => Promise<T>): Promise<T> => {
+export const withTronWeb = async <T = any>(cb: (tw: TronWeb) => Promise<T>): Promise<T> => {
   const retry = config.get('retry');
   for (let i = 0; i < retry; ++i) {
     try {
