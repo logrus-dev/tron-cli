@@ -9,9 +9,6 @@ Using official [TronWeb SDK](https://developers.tron.network/docs/tronweb-1) and
 
 ```
 npx @logrus/tron-cli
-A known issue: "Error: Cannot find module '@noble/secp256k1'"
-To solve this issue, please install @noble/secp256k1@1.7.1 manually: npm install @noble/secp256k1@1.7.1
-Blame Tron devs.
 ```
 
 Command arguments (all optional):
