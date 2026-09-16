@@ -7,6 +7,10 @@ Basic operations with Tron TRX and USDT tokens.
 Application is 100% stateless - keys are not stored nor logged anywhere. You only enter and see them in the console.
 Using official [TronWeb SDK](https://developers.tron.network/docs/tronweb-1) and [public Mainnet nodes](https://developers.tron.network/docs/networks#public-node).
 
+> **Breaking changes in version 2.0.0 and later:** The [TRON network documentation](https://developers.tron.network/docs/networks) states: "To help keep the public seed nodes' P2P service stable, avoid using their HTTP or gRPC APIs as chain-data query endpoints; use your own Fullnode or a published API endpoint from an RPC provider instead." The author of `tron-cli` considers querying public nodes a significant denial-of-service risk, so the default CLI behavior now uses the TronGrid API without requiring an API key. Use `--endpoint seed` to restore the previous public-seed-node behavior as a fallback.
+
+Grid mode may require a free API key. Obtain one at [TronGrid](https://www.trongrid.io/) and provide it with `--tronGridApiKey` or `TRON_CLI_TRON_GRID_API_KEY`. The bundled seed-node list may become outdated; use `--endpoint <node>` to specify a missing public node explicitly, including its IP or hostname and optional port.
+
 ```
 npx @logrus/tron-cli
 ```
@@ -17,9 +21,8 @@ Command arguments (all optional):
 | ------------------ | ------- | ------- | ----------- |
 | `--retry`          | Number  | 3       | Number of retries after the initial request. Retry attempts are logged and run immediately. |
 | `--timeout`        | Number  | 10000   | HTTP API timeout in milliseconds. |
-| `--nodes`          | String  | [Public Mainnet nodes](https://developers.tron.network/docs/networks#public-node) | Comma-separated list of TRON blockchain full node IPs. |
-| `--feeLimit`       | Number  | 50    | Transaction fee limit in TRX. |
-| `--debug`          | Boolean | false | Show debug logs |
-| `--tronGridApiUrl` | String  | Empty | [TronGrid](https://developers.tron.network/reference/background) API URL. If specified, `--nodes` argument is ignored. |
-| `--tronGridApiKey` | String  | Empty | [TronGrid](https://developers.tron.network/reference/background) API Key |
+| `--endpoint`       | String  | `grid`  | Endpoint: `grid` uses TronGrid, `seed` uses the hardcoded seed nodes, or provide a custom URL, hostname, IP, and optional port. `http://` is added when omitted. |
+| `--feeLimit`       | Number  | 50      | Transaction fee limit in TRX. |
+| `--debug`          | Boolean | false   | Show debug logs |
+| `--tronGridApiKey` | String  | Empty   | Optional API key for Grid or a compatible custom endpoint. Get a free key from [TronGrid](https://www.trongrid.io/). |
 

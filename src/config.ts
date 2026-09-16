@@ -1,8 +1,7 @@
 import convict from 'convict';
-import lodash from 'lodash';
 import { existsSync } from 'fs';
 
-const fullNodeIps = [
+export const seedNodeIps = [
   '3.225.171.164',
   '52.53.189.99',
   '18.196.99.16',
@@ -10,33 +9,19 @@ const fullNodeIps = [
   '18.133.82.227',
   '35.180.51.163',
   '54.252.224.209',
+  '18.231.27.82',
   '52.15.93.92',
   '34.220.77.106',
-  '15.207.144.3',
+  '13.127.47.211',
   '13.124.62.58',
-  '15.222.19.181',
-  '18.209.42.127',
-  '3.218.137.187',
-  '34.237.210.82',
-  '13.228.119.63',
-  '18.139.193.235',
-  '18.141.79.38',
-  '18.139.248.26',
+  '13.229.128.108',
+  '35.182.37.246',
+  '34.218.41.201',
+  '15.207.144.3',
+  '13.124.142.115',
+  '15.207.147.245',
+  '13.231.82.66',
 ];
-
-convict.addFormat({
-  name: 'comma-separated-strings',
-  validate: () => { },
-  coerce: val => {
-    if (Array.isArray(val)) {
-      return val;
-    }
-    if (!lodash.isString(val)) {
-      return [];
-    }
-    return val.split(',');
-  }
-});
 
 const config = convict({
   retry: {
@@ -53,12 +38,12 @@ const config = convict({
     env: 'TRON_CLI_TIMEOUT',
     arg: 'timeout',
   },
-  nodes: {
-    doc: 'List of TRON blockchain full node IPs.',
-    format: 'comma-separated-strings',
-    env: 'TRON_CLI_NODES',
-    arg: 'nodes',
-    default: fullNodeIps,
+  endpoint: {
+    doc: "TRON endpoint: 'grid' for TronGrid, 'seed' for hardcoded seed nodes, or an arbitrary endpoint for specific node.",
+    format: String,
+    env: 'TRON_CLI_ENDPOINT',
+    arg: 'endpoint',
+    default: 'grid',
   },
   feeLimit: {
     doc: 'Transaction fee limit in TRX.',
@@ -73,14 +58,6 @@ const config = convict({
     env: 'TRON_CLI_DEBUG',
     arg: 'debug',
     default: false,
-  },
-  tronGridApiUrl: {
-    doc: 'TronGrid API URL.',
-    format: String,
-    env: 'TRON_CLI_TRON_GRID_API_URL',
-    arg: 'tronGridApiUrl',
-    default: null,
-    nullable: true,
   },
   tronGridApiKey: {
     doc: 'TronGrid API key.',

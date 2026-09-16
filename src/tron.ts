@@ -1,6 +1,6 @@
 import lodash from 'lodash';
 import { TronWeb, providers } from 'tronweb';
-import config from './config.js';
+import config, { seedNodeIps } from './config.js';
 
 type HttpProviderRequest = InstanceType<typeof providers.HttpProvider>['request'];
 type RequestPayload = Parameters<HttpProviderRequest>[1];
@@ -30,20 +30,36 @@ class RetryingHttpProvider extends providers.HttpProvider {
   }
 }
 
+const getCustomEndpointUrls = (endpoint: string): [string, string, string] => {
+  const hasProtocol = /^https?:\/\//i.test(endpoint);
+  const normalizedEndpoint = hasProtocol ? endpoint : `http://${endpoint}`;
+  const parsedEndpoint = new URL(normalizedEndpoint);
+
+  // A bare host is treated as a seed-style node and uses TRON's default API ports.
+  if (!hasProtocol && !parsedEndpoint.pathname.slice(1) && !parsedEndpoint.port) {
+    const host = parsedEndpoint.hostname;
+    return [`http://${host}:8090`, `http://${host}:8091`, `http://${host}:8090`];
+  }
+
+  return [normalizedEndpoint, normalizedEndpoint, normalizedEndpoint];
+};
+
 const getTronWeb = () => {
   let fullNodeUrl: string;
   let solidityNodeUrl: string;
   let eventServerUrl: string;
 
+  const endpoint = config.get('endpoint');
   const apiKey = config.get('tronGridApiKey');
-  const apiUrl = config.get('tronGridApiUrl');
-  if (apiUrl) {
-    fullNodeUrl = solidityNodeUrl = eventServerUrl = apiUrl;
-  } else {
-    let nodeHost = lodash.shuffle(config.get('nodes'))[0];
+  if (endpoint === 'grid') {
+    fullNodeUrl = solidityNodeUrl = eventServerUrl = 'https://api.trongrid.io';
+  } else if (endpoint === 'seed') {
+    const nodeHost = lodash.shuffle(seedNodeIps)[0];
     fullNodeUrl = `http://${nodeHost}:8090`;
     solidityNodeUrl = `http://${nodeHost}:8091`;
     eventServerUrl = `http://${nodeHost}:8090`;
+  } else {
+    [fullNodeUrl, solidityNodeUrl, eventServerUrl] = getCustomEndpointUrls(endpoint);
   }
 
   const timeout = config.get('timeout');
