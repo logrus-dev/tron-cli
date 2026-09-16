@@ -15,9 +15,8 @@ Command arguments (all optional):
 
 | Argument           | Type    | Default | Description |
 | ------------------ | ------- | ------- | ----------- |
-| `--retry`          | Number  | 10      | Number of re-tries. Each re-try uses another random node from the list. |
-| `--retryDelay`     | Number  | 500     | Delay between re-tries in milliseconds. |
-| `--timeout`        | Number  | 15000   | HTTP API timeout in milliseconds. |
+| `--retry`          | Number  | 3       | Number of retries after the initial request. Retry attempts are logged and run immediately. |
+| `--timeout`        | Number  | 10000   | HTTP API timeout in milliseconds. |
 | `--nodes`          | String  | [Public Mainnet nodes](https://developers.tron.network/docs/networks#public-node) | Comma-separated list of TRON blockchain full node IPs. |
 | `--feeLimit`       | Number  | 50    | Transaction fee limit in TRX. |
 | `--debug`          | Boolean | false | Show debug logs |

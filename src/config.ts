@@ -40,23 +40,16 @@ convict.addFormat({
 
 const config = convict({
   retry: {
-    doc: 'Number of re-tries. Each re-try uses another random node from the list.',
+    doc: 'Number of retries after the initial request.',
     format: Number,
-    default: 10,
+    default: 3,
     env: 'TRON_CLI_RETRY',
     arg: 'retry',
-  },
-  retryDelay: {
-    doc: 'Delay between re-tries in milliseconds.',
-    format: Number,
-    default: 500,
-    env: 'TRON_CLI_RETRY_DELAY',
-    arg: 'retry-delay',
   },
   timeout: {
     doc: 'HTTP API timeout in milliseconds.',
     format: Number,
-    default: 15000,
+    default: 10000,
     env: 'TRON_CLI_TIMEOUT',
     arg: 'timeout',
   },

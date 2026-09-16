@@ -1,7 +1,34 @@
 import lodash from 'lodash';
 import { TronWeb, providers } from 'tronweb';
 import config from './config.js';
-import { delay } from './helpers.js';
+
+type HttpProviderRequest = InstanceType<typeof providers.HttpProvider>['request'];
+type RequestPayload = Parameters<HttpProviderRequest>[1];
+type RequestMethod = Parameters<HttpProviderRequest>[2];
+
+class RetryingHttpProvider extends providers.HttpProvider {
+  constructor(host: string, timeout: number, private readonly retries: number, headers = {}) {
+    super(host, timeout, '', '', headers);
+  }
+
+  override async request<T = unknown>(
+    url: string,
+    payload: RequestPayload = {},
+    method: RequestMethod = 'get',
+  ): Promise<T> {
+    for (let retryAttempt = 0; ; ++retryAttempt) {
+      try {
+        return await super.request<T>(url, payload, method);
+      } catch (error: any) {
+        if (retryAttempt >= this.retries) {
+          throw error;
+        }
+
+        console.error(`⚠️ ${error.message ?? 'An error occurred.'}`);
+      }
+    }
+  }
+}
 
 const getTronWeb = () => {
   let fullNodeUrl: string;
@@ -20,15 +47,12 @@ const getTronWeb = () => {
   }
 
   const timeout = config.get('timeout');
-  const HttpProvider = providers.HttpProvider;
-  const fullNode = new HttpProvider(fullNodeUrl, timeout);
-  const solidityNode = new HttpProvider(solidityNodeUrl, timeout);
-  const eventServer = new HttpProvider(eventServerUrl, timeout);
+  const retries = config.get('retry');
+  const headers = apiKey ? { 'TRON-PRO-API-KEY': apiKey } : {};
+  const fullNode = new RetryingHttpProvider(fullNodeUrl, timeout, retries, headers);
+  const solidityNode = new RetryingHttpProvider(solidityNodeUrl, timeout, retries, headers);
+  const eventServer = new RetryingHttpProvider(eventServerUrl, timeout, retries, headers);
   const tronWeb = new TronWeb(fullNode, solidityNode, eventServer);
-
-  if (apiKey) {
-    tronWeb.setHeader({"TRON-PRO-API-KEY": apiKey});
-  }
 
   return tronWeb;
 };
@@ -39,21 +63,4 @@ export const fromSun = staticTronWeb.fromSun;
 
 export const toSun = staticTronWeb.toSun;
 
-export const withTronWeb = async <T = any>(cb: (tw: TronWeb) => Promise<T>): Promise<T> => {
-  const retry = config.get('retry');
-  for (let i = 0; i < retry; ++i) {
-    try {
-      return await cb(getTronWeb());
-    } catch (e: any) {
-      if (config.get('debug')) {
-        console.error(e);
-      }
-      if (i === retry - 1) {
-        throw e;
-      }
-      await delay(config.get('retryDelay'));
-    }
-  }
-
-  throw new Error('Failed to perform.');
-};
+export const withTronWeb = <T = any>(cb: (tw: TronWeb) => Promise<T>): Promise<T> => cb(getTronWeb());
