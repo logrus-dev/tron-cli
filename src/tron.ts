@@ -1,7 +1,7 @@
-import { shuffle } from 'lodash';
+import lodash from 'lodash';
 import { TronWeb, providers } from 'tronweb';
-import config from './config';
-import { delay } from './helpers';
+import config from './config.js';
+import { delay } from './helpers.js';
 
 const getTronWeb = () => {
   let fullNodeUrl: string;
@@ -13,7 +13,7 @@ const getTronWeb = () => {
   if (apiUrl) {
     fullNodeUrl = solidityNodeUrl = eventServerUrl = apiUrl;
   } else {
-    let nodeHost = shuffle(config.get('nodes'))[0];
+    let nodeHost = lodash.shuffle(config.get('nodes'))[0];
     fullNodeUrl = `http://${nodeHost}:8090`;
     solidityNodeUrl = `http://${nodeHost}:8091`;
     eventServerUrl = `http://${nodeHost}:8090`;

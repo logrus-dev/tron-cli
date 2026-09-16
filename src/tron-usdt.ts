@@ -1,4 +1,4 @@
-import { withTronWeb } from "./tron";
+import { withTronWeb } from "./tron.js";
 import { Contract } from 'tronweb';
 
 const usdtSmartContract = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t';

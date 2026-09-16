@@ -1,5 +1,5 @@
 import convict from 'convict';
-import { isString } from 'lodash';
+import lodash from 'lodash';
 import { existsSync } from 'fs';
 
 const fullNodeIps = [
@@ -31,7 +31,7 @@ convict.addFormat({
     if (Array.isArray(val)) {
       return val;
     }
-    if (!isString(val)) {
+    if (!lodash.isString(val)) {
       return [];
     }
     return val.split(',');

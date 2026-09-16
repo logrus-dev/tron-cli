@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-import { fromSun, toSun, withTronWeb } from './tron';
-import { withUsdt } from './tron-usdt';
+import { fromSun, toSun, withTronWeb } from './tron.js';
+import { withUsdt } from './tron-usdt.js';
 import inquirer from 'inquirer';
-import config from './config';
-import { delay, passwordTransformer } from './helpers';
+import config from './config.js';
+import { delay, passwordTransformer } from './helpers.js';
 import logUpdate from 'log-update';
-import BigNumber from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 
 const createAccount = async () => {
   const account = await withTronWeb(async tw => tw.createRandom());
@@ -20,7 +20,7 @@ const usdtBalance = async () => {
       type: 'input',
       message: 'Tron account address',
       name: 'address',
-      filter: s => s?.trim(),
+      filter: (s: string) => s?.trim(),
     }
   ]);
 
@@ -39,7 +39,7 @@ const getAccount = async () => {
       type: 'input',
       message: 'Tron account address',
       name: 'address',
-      filter: s => s?.trim(),
+      filter: (s: string) => s?.trim(),
     }
   ]);
 
@@ -53,7 +53,7 @@ const trxBalance = async () => {
       type: 'input',
       message: 'Tron account address',
       name: 'address',
-      filter: s => s?.trim(),
+      filter: (s: string) => s?.trim(),
     }
   ]);
 
@@ -67,7 +67,7 @@ const usdtTransfer = async () => {
       type: 'input',
       message: 'Tron account of the recipient',
       name: 'addressTo',
-      filter: s => s?.trim(),
+      filter: (s: string) => s?.trim(),
     },
     {
       type: 'number',
@@ -107,7 +107,7 @@ const trxTransfer = async () => {
       type: 'input',
       message: 'Tron account of the recipient',
       name: 'addressTo',
-      filter: s => s?.trim(),
+      filter: (s: string) => s?.trim(),
     },
     {
       type: 'number',
@@ -154,7 +154,7 @@ const transactionInfo = async () => {
       type: 'input',
       message: 'ID of transaction',
       name: 'transactionId',
-      filter: s => s?.trim(),
+      filter: (s: string) => s?.trim(),
     }
   ]);
 
@@ -194,7 +194,7 @@ const handleErrors = (cb: (...args: any[]) => Promise<void>) => async (...args: 
   while (true) {
     const { command } = await inquirer.prompt([
       {
-        type: 'list',
+        type: 'select',
         message: 'Choose Tron network command',
         name: 'command',
         choices: [...Object.keys(commands), 'exit'],
