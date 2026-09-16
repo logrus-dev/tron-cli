@@ -62,6 +62,12 @@ const getTronWeb = () => {
     [fullNodeUrl, solidityNodeUrl, eventServerUrl] = getCustomEndpointUrls(endpoint);
   }
 
+  if (config.get('debug')) {
+    console.log(
+      `[debug] TRON endpoint (${endpoint}): fullNode=${fullNodeUrl}, solidityNode=${solidityNodeUrl}, eventServer=${eventServerUrl}`,
+    );
+  }
+
   const timeout = config.get('timeout');
   const retries = config.get('retry');
   const headers = apiKey ? { 'TRON-PRO-API-KEY': apiKey } : {};
