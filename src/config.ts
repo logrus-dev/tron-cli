@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import convict from 'convict';
 import { existsSync } from 'fs';
 

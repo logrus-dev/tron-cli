@@ -1,6 +1,6 @@
 {
   "name": "@logrus/tron-cli",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "module",
   "description": "Simple interactive CLI for basic USDT-TRC20 transactions.",
   "repository": {
@@ -31,12 +31,19 @@
   "license": "GPL-3.0-only",
   "dependencies": {
     "convict": "^6.2.5",
+    "dotenv": "^17.4.2",
     "inquirer": "^14.2.2",
     "lodash": "^4.18.1",
     "log-update": "^8.0.0",
     "tronweb": "^6.5.1"
   },
-  "bundleDependencies": true,
+  "bundleDependencies": [
+    "convict",
+    "inquirer",
+    "lodash",
+    "log-update",
+    "tronweb"
+  ],
   "devDependencies": {
     "@types/convict": "^6.1.6",
     "@types/inquirer": "^9.0.10",
